@@ -102,6 +102,42 @@ module ApplicationTests
       assert_match '<li><a href="/rails/mailers/notifier/foo">foo</a></li>', last_response.body
     end
 
+    test "mailer previews are loaded from a custom preview_path when it's multiple" do
+      add_to_config "config.action_mailer.preview_path = ['#{app_path}/lib/notifier_previews', '#{app_path}/lib/confirm_previews']"
+
+      ['notifier', 'confirm'].each do |name|
+        mailer name, <<-RUBY
+          class #{name.camelize} < ActionMailer::Base
+            default from: "from@example.com"
+
+            def foo
+              mail to: "to@example.org"
+            end
+          end
+        RUBY
+
+        text_template "#{name}/foo", <<-RUBY
+          Hello, World!
+        RUBY
+
+        app_file "lib/#{name}_previews/notifier_preview.rb", <<-RUBY
+          class #{name.camelize}Preview < ActionMailer::Preview
+            def foo
+              #{name.camelize}.foo
+            end
+          end
+        RUBY
+      end
+
+      app('development')
+
+      get "/rails/mailers"
+      assert_match '<h3><a href="/rails/mailers/notifier">Notifier</a></h3>', last_response.body
+      assert_match '<li><a href="/rails/mailers/notifier/foo">foo</a></li>', last_response.body
+      assert_match '<h3><a href="/rails/mailers/confirm">Confirm</a></h3>', last_response.body
+      assert_match '<li><a href="/rails/mailers/confirm/foo">foo</a></li>', last_response.body
+    end
+
     test "mailer previews are reloaded across requests" do
       app('development')
 

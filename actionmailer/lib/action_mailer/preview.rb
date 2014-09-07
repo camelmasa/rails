@@ -96,7 +96,10 @@ module ActionMailer
       protected
         def load_previews #:nodoc:
           if preview_path
-            Dir["#{preview_path}/**/*_preview.rb"].each{ |file| require_dependency file }
+            paths = preview_path.is_a?(String) ? [preview_path] : preview_path
+            paths.each do |path|
+              Dir["#{path}/**/*_preview.rb"].each{ |file| require_dependency file }
+            end
           end
         end
 
