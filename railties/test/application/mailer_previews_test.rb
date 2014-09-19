@@ -103,7 +103,7 @@ module ApplicationTests
     end
 
     test "mailer previews are loaded from a custom preview_path when it's multiple" do
-      add_to_config "config.action_mailer.preview_path = ['#{app_path}/lib/notifier_previews', '#{app_path}/lib/confirm_previews']"
+      add_to_config "config.action_mailer.preview_paths = ['#{app_path}/lib/notifier_previews', '#{app_path}/lib/confirm_previews']"
 
       ['notifier', 'confirm'].each do |keyword|
         mailer keyword, <<-RUBY
