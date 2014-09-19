@@ -337,7 +337,7 @@ module ActionMailer
   # mailer previews directory can be configured using the <tt>preview_paths</tt> option which has a default
   # of <tt>test/mailers/previews</tt>:
   #
-  #   config.action_mailer.preview_paths = "#{Rails.root}/lib/mailer_previews"
+  #   config.action_mailer.preview_paths = ["#{Rails.root}/lib/mailer_previews"]
   #
   # An overview of all previews is accessible at <tt>http://localhost:3000/rails/mailers</tt>
   # on a running development server instance.

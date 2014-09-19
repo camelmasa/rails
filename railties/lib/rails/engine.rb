@@ -607,6 +607,10 @@ module Rails
       end
     end
 
+    initializer :prepend_preview_path do |app|
+      app.config.action_mailer.preview_files.unshift(*paths["test/mailers/previews"].existent)
+    end
+
     initializer :load_config_initializers do
       config.paths["config/initializers"].existent.sort.each do |initializer|
         load_config_initializer(initializer)

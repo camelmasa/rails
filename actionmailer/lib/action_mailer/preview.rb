@@ -5,11 +5,12 @@ module ActionMailer
     extend ActiveSupport::Concern
 
     included do
-      # Set the location of mailer previews through app configuration:
+      # Add the location of mailer previews through app configuration:
       #
-      #     config.action_mailer.preview_paths = "#{Rails.root}/lib/mailer_previews"
+      #     config.action_mailer.preview_paths << "#{Rails.root}/lib/mailer_previews"
       #
       mattr_accessor :preview_paths, instance_writer: false
+      self.preview_paths = []
 
       # Enable or disable mailer previews through app configuration:
       #
@@ -22,6 +23,10 @@ module ActionMailer
       # :nodoc:
       mattr_accessor :preview_interceptors, instance_writer: false
       self.preview_interceptors = []
+
+      # :nodoc:
+      mattr_accessor :preview_files, instance_writer: false
+      self.preview_files = []
     end
 
     module ClassMethods
@@ -95,8 +100,8 @@ module ActionMailer
 
       protected
         def load_previews #:nodoc:
-          if preview_paths
-            Dir["#{preview_paths}/**/*_preview.rb"].each{ |file| require_dependency file }
+          if preview_files
+            preview_files.each{ |file| require_dependency file }
           end
         end
 
@@ -106,6 +111,10 @@ module ActionMailer
 
         def show_previews #:nodoc:
           Base.show_previews
+        end
+
+        def preview_files #:nodoc:
+          Base.preview_files
         end
 
         def inform_preview_interceptors(message) #:nodoc:

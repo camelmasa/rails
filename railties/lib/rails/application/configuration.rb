@@ -9,7 +9,7 @@ module Rails
       attr_accessor :allow_concurrency, :asset_host, :assets, :autoflush_log,
                     :cache_classes, :cache_store, :consider_all_requests_local, :console,
                     :eager_load, :exceptions_app, :file_watcher, :filter_parameters,
-                    :force_ssl, :helpers_paths, :logger, :log_formatter, :log_tags,
+                    :force_ssl, :helpers_paths, :preview_paths, :logger, :log_formatter, :log_tags,
                     :railties_order, :relative_url_root, :secret_key_base, :secret_token,
                     :serve_static_assets, :ssl_options, :static_cache_control, :session_options,
                     :time_zone, :reload_classes_only_on_change,
@@ -26,6 +26,7 @@ module Rails
         @filter_parameters             = []
         @filter_redirect               = []
         @helpers_paths                 = []
+        @preview_paths                 = []
         @serve_static_assets           = true
         @static_cache_control          = nil
         @force_ssl                     = false
