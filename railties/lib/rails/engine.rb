@@ -91,17 +91,18 @@ module Rails
   # The available paths in an engine are:
   #
   #   class MyEngine < Rails::Engine
-  #     paths["app"]                 # => ["app"]
-  #     paths["app/controllers"]     # => ["app/controllers"]
-  #     paths["app/helpers"]         # => ["app/helpers"]
-  #     paths["app/models"]          # => ["app/models"]
-  #     paths["app/views"]           # => ["app/views"]
-  #     paths["lib"]                 # => ["lib"]
-  #     paths["lib/tasks"]           # => ["lib/tasks"]
-  #     paths["config"]              # => ["config"]
-  #     paths["config/initializers"] # => ["config/initializers"]
-  #     paths["config/locales"]      # => ["config/locales"]
-  #     paths["config/routes.rb"]    # => ["config/routes.rb"]
+  #     paths["app"]                   # => ["app"]
+  #     paths["app/controllers"]       # => ["app/controllers"]
+  #     paths["app/helpers"]           # => ["app/helpers"]
+  #     paths["app/models"]            # => ["app/models"]
+  #     paths["app/views"]             # => ["app/views"]
+  #     paths["lib"]                   # => ["lib"]
+  #     paths["lib/tasks"]             # => ["lib/tasks"]
+  #     paths["config"]                # => ["config"]
+  #     paths["config/initializers"]   # => ["config/initializers"]
+  #     paths["config/locales"]        # => ["config/locales"]
+  #     paths["config/routes.rb"]      # => ["config/routes.rb"]
+  #     paths["test/mailers/previews"] # => ["test/mailers/previews"]
   #   end
   #
   # The <tt>Application</tt> class adds a couple more paths to this set. And as in your
@@ -605,6 +606,10 @@ module Rails
       if !isolated? || (app == self)
         app.config.helpers_paths.unshift(*paths["app/helpers"].existent)
       end
+    end
+
+    initializer :prepend_preview_files do |app|
+      ActionMailer::Base.preview_files.unshift(*paths["test/mailers/previews"].existent)
     end
 
     initializer :load_config_initializers do

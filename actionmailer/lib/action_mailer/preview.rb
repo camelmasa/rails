@@ -22,6 +22,10 @@ module ActionMailer
       # :nodoc:
       mattr_accessor :preview_interceptors, instance_writer: false
       self.preview_interceptors = []
+
+      # :nodoc:
+      mattr_accessor :preview_files, instance_writer: false
+      self.preview_files = []
     end
 
     module ClassMethods
@@ -95,8 +99,8 @@ module ActionMailer
 
       protected
         def load_previews #:nodoc:
-          if preview_path
-            Dir["#{preview_path}/**/*_preview.rb"].each{ |file| require_dependency file }
+          unless preview_files.blank?
+            preview_files.each{ |file| require_dependency file }
           end
         end
 
@@ -106,6 +110,10 @@ module ActionMailer
 
         def show_previews #:nodoc:
           Base.show_previews
+        end
+
+        def preview_files #:nodoc:
+          Base.preview_files
         end
 
         def inform_preview_interceptors(message) #:nodoc:
